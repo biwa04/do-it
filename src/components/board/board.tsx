@@ -85,8 +85,10 @@ const KanbanBoard: FC<KanbanBoardParam> = () => {
       <DndContext {...defaultAnnouncements} sensors={sensors}>
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: "400px"}}>
           {AllStatus().map((status, _) => (
+            <div key={status}>
             <TaskCardLane id={status} title={status} cards={items.map(TaskToTaskCardParam).filter((val, _) => (val.status == status))}></TaskCardLane>
-          ))}
+           </div>
+           ))}
         </div>
       </DndContext>
     </div>
