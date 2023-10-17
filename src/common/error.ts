@@ -6,6 +6,6 @@ export interface UsecaseError extends BaseError {
 
 }
 
-export interface RepositoryError extends BaseError {
+export interface APIError extends BaseError {
 
 }
