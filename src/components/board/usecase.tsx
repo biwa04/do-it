@@ -1,7 +1,7 @@
 import { Task } from "@/domain/entities/task"
 import { AndThen, CreateFailure, OrElse, Result } from "@/common/result"
 import { UsecaseError } from "@/common/error"
-import { BackendAPI } from "@/domain/services/backendApi"
+import { BackendAPI } from  "@/infrastructures/backendAPI/backendAPI"
 
 interface BoardUsecaseError extends UsecaseError {}
 

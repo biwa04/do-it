@@ -1,4 +1,3 @@
-import { UUID } from "crypto"
 import { Status } from "../valueobjets/status"
 import { ID } from "../valueobjets/id"
 
