@@ -1,0 +1,1 @@
+interface APIError extends BaseError {}

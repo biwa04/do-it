@@ -15,7 +15,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { NewToDo, AllStatus, StringToStatus } from "@/domain/valueobjets/status";
 import { IDfromString } from "@/domain/valueobjets/id";
 import { TaskToTaskCardParam } from "./taskCard";
-import { NewMockBackendAPI } from "@/infrastructures/backendAPI/mockBackendAPI";
+import { AndThen, OrElse, Result } from "@/common/result"
+import { NewMockBackendAPI, NewMockBackendAPIType } from "@/infrastructures/backendAPI/mockBackendAPI";
 import { NewBoardUsecase } from "./usecase";
 
 type KanbanBoardParam = {}
@@ -28,10 +29,14 @@ const KanbanBoard: FC<KanbanBoardParam> = () => {
     })
   );
 
-  var backendAPI = NewMockBackendAPI()
+  var backendAPI = NewMockBackendAPI(NewMockBackendAPIType())
   const usecase = NewBoardUsecase(backendAPI)
+  const tasks: Result<Task[], Error> = usecase.getNTasks(30)
+  if (tasks.isFailure) {
+    return <div></div>
+  }
 
-  const [items, setItem] = useState<Task[]>()
+  const [items, setItem] = useState<Task[]>(tasks.value)
 
   const defaultAnnouncements = {
     onDragOver(e: DragOverEvent) {
