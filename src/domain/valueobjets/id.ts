@@ -1,7 +1,13 @@
-export type ID = {
-    value: string
+import { Result } from "@/common/result"
+import { ValueObjectError } from "./error"
+
+export type NewFromStringError = ValueObjectError
+
+export interface IDClass<T> {
+    readonly toString: (t:ID<T>) => string
 }
 
-export function IDfromString(s: string): ID {
-    return {value: s}    
+export interface ID<T> {
+    readonly value: T
+    readonly idClass: IDClass<T>
 }

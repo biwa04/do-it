@@ -13,7 +13,6 @@ import { useState } from "react";
 import { Task, ChangeStatusTo } from "@/domain/entities/task";
 import { v4 as uuidv4 } from 'uuid';
 import { NewToDo, AllStatus, StringToStatus } from "@/domain/valueobjets/status";
-import { IDfromString } from "@/domain/valueobjets/id";
 import { TaskToTaskCardParam } from "./taskCard";
 import { AndThen, OrElse, Result } from "@/common/result"
 import { NewMockBackendAPI, NewMockBackendAPIType } from "@/infrastructures/backendAPI/mockBackendAPI";
@@ -45,7 +44,7 @@ const KanbanBoard: FC<KanbanBoardParam> = () => {
         return
       }
 
-      const item = items.find((val, _) => (val.id.value == e.active.id.toString()))
+      const item = items.find((val, _) => (val.id.idClass.toString(val.id) == e.active.id.toString()))
       if (item == undefined) {
         return
       }
@@ -62,7 +61,7 @@ const KanbanBoard: FC<KanbanBoardParam> = () => {
       const newTask = ChangeStatusTo(item, status)
 
       setItem(
-        items.filter((val, _) => (val.id.value != e.active.id.toString())).concat([newTask])
+        items.filter((val, _) => (val.id.idClass.toString(val.id) != e.active.id.toString())).concat([newTask])
       )
     },
   }
