@@ -1,9 +1,9 @@
 import { Task } from "@/domain/entities/task"
 import { Result, OrElse, CreateFailure } from "@/common/result"
 import { BackendAPI } from "@/infrastructures/backendAPI/backendAPI"
+import { BoardRepository } from "./repository"
 
-interface UsecaseError extends BaseError {
-}
+interface UsecaseError extends BaseError {}
 
 type getNTasksError = UsecaseError
 
@@ -19,10 +19,11 @@ type Usecase = {
     getNTasks: (n: number) => Result<Task[], UsecaseError>,
 }
 
-export function NewBoardUsecase(api: BackendAPI): Usecase {
+export function NewBoardUsecase(repo: BoardRepository): Usecase {
     return {
         getNTasks: (n: number): Result<Task[], UsecaseError> => {
-            return OrElse(api.getTasks(n))((val) => (CreateFailure(NewUsecaseError(val.value))))
+            console.log(repo.getTasks(n))
+            return OrElse(repo.getTasks(n))((val) => (CreateFailure(NewUsecaseError(val.value))))
         }
     }
 }

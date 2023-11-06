@@ -11,12 +11,11 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import TaskCardLane, { TaskCardLaneParam } from "./taskCardLane";
 import { useState } from "react";
 import { Task, ChangeStatusTo } from "@/domain/entities/task";
-import { v4 as uuidv4 } from 'uuid';
-import { NewToDo, AllStatus, StringToStatus } from "@/domain/valueobjets/status";
+import { AllStatus, StringToStatus } from "@/domain/valueobjets/status";
 import { TaskToTaskCardParam } from "./taskCard";
-import { AndThen, OrElse, Result } from "@/common/result"
-import { NewMockBackendAPI, NewMockBackendAPIType } from "@/infrastructures/backendAPI/mockBackendAPI";
+import { Result } from "@/common/result"
 import { NewBoardUsecase } from "./usecase";
+import { NewBoardRepository } from "@/infrastructures/repositoryImpls/repositoryImpls";
 
 type KanbanBoardParam = {}
 
@@ -28,8 +27,7 @@ const KanbanBoard: FC<KanbanBoardParam> = () => {
     })
   );
 
-  var backendAPI = NewMockBackendAPI(NewMockBackendAPIType())
-  const usecase = NewBoardUsecase(backendAPI)
+  const usecase = NewBoardUsecase(NewBoardRepository())
   const tasks: Result<Task[], Error> = usecase.getNTasks(30)
   if (tasks.isFailure) {
     return <div></div>

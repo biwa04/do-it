@@ -21,7 +21,7 @@ export function ChangeStatusTo(task: Task, status: Status): Task {
     }
 }
 
-export function NewFunction(title: string, id: string): Task {
+export function NewTask(title: string, id: string): Task {
     return {
         id: {
             value: id,
