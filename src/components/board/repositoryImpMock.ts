@@ -1,5 +1,5 @@
 import { BoardRepository, BoardRepositoryError } from "./repository";
-import { CreateSuccess, Result } from "@/common/result";
+import { CreateSuccess, Result } from "@/lib/result";
 import { NewTask, Task } from "@/domain/entities/task";
 import { v4 as uuidv4 } from 'uuid';
 

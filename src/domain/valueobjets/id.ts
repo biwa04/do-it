@@ -1,4 +1,4 @@
-import { Result } from "@/common/result"
+import { Result } from "@/lib/result"
 import { ValueObjectError } from "./error"
 
 export type NewFromStringError = ValueObjectError

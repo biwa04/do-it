@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NewTask, Task } from "@/domain/entities/task";
 import { BoardRepository, BoardRepositoryError } from "./repository";
-import { CreateFailure, CreateSuccess, Result } from "@/common/result";
+import { CreateFailure, CreateSuccess, Result } from "@/lib/result";
 
 
 export type BoardRepositoryImpPrisma = BoardRepository & {

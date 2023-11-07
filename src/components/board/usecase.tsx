@@ -1,5 +1,5 @@
 import { Task } from "@/domain/entities/task"
-import { Result, OrElse, CreateFailure } from "@/common/result"
+import { Result, OrElse, CreateFailure } from "@/lib/result"
 import { BoardRepository } from "./repository"
 
 interface UsecaseError extends BaseError {}

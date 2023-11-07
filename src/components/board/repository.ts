@@ -1,4 +1,4 @@
-import { Result } from "@/common/result";
+import { Result } from "@/lib/result";
 import { Task } from "@/domain/entities/task";
 
 export interface BoardRepositoryError extends BaseError {}

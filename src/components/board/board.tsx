@@ -3,7 +3,7 @@
 import { NewBoardRepository } from "@/infrastructures/repositoryImpls/repositoryImpls";
 import KanbanBoardCC from "./boardCC";
 import { NewBoardUsecase } from "./usecase";
-import { Result } from "@/common/result";
+import { Result } from "@/lib/result";
 import { Task } from "@/domain/entities/task";
 
 export default async function KanbanBoard() {
