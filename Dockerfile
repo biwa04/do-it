@@ -9,7 +9,11 @@ RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
 
 COPY src ./src
 COPY public ./public
+COPY prisma/schema.prisma ./prisma/schema.prisma
 COPY next.config.js .
 COPY tsconfig.json .
+COPY .env ./.env
+
+RUN npx prisma generate
 
 CMD ["yarn", "dev"]

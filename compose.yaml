@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:15.2-alpine
+    ports:
+      - target: 5432
+        published: 5432
+    restart: always
+    volumes:
+      - ./.local/db:/data/db
+    env_file:
+      - .env
+    networks:
+      - database
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+    networks:
+      - database
+    env_file:
+      - .env
+
+networks:
+  database:
