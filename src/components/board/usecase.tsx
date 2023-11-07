@@ -15,13 +15,15 @@ function NewUsecaseError(e: Error): getNTasksError {
 }
 
 type Usecase = {
-    getNTasks: (n: number) => Result<Task[], UsecaseError>,
+    getNTasks: (n: number) => Promise<Result<Task[], UsecaseError>>,
 }
 
 export function NewBoardUsecase(repo: BoardRepository): Usecase {
     return {
-        getNTasks: (n: number): Result<Task[], UsecaseError> => {
-            return OrElse(repo.getTasks(n))((val) => (CreateFailure(NewUsecaseError(val.value))))
+        getNTasks: async (n: number): Promise<Result<Task[], UsecaseError>> => {
+            return repo.getTasks(n).then((result) => {
+                return OrElse(result)((val) => (CreateFailure(NewUsecaseError(val.value))))
+            })
         }
     }
 }

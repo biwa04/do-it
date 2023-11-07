@@ -1,6 +1,7 @@
 import { BoardRepository } from "@/components/board/repository";
-import { BoardRepositoryImpMockInstance } from "@/components/board/repositoryImpMock";
+import { NewBoardRepositoryImpPrisma } from "@/components/board/repositoryImpPrisma";
+import { prisma } from "@/lib/prisma";
 
 export function NewBoardRepository(): BoardRepository {
-    return BoardRepositoryImpMockInstance;
+    return NewBoardRepositoryImpPrisma(prisma);
 }
