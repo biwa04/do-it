@@ -1,5 +1,5 @@
-import { BoardRepository } from "@/components/board/repository";
-import { NewBoardRepositoryImpPrisma } from "@/components/board/repositoryImpPrisma";
+import { BoardRepository } from "@/components/board/repositories/repository";
+import { NewBoardRepositoryImpPrisma } from "@/components/board/repositories/repositoryImpPrisma";
 import { prisma } from "@/lib/prisma";
 
 export function NewBoardRepository(): BoardRepository {

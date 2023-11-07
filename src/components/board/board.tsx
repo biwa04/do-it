@@ -1,10 +1,8 @@
 'use server';
 
 import { NewBoardRepository } from "@/infrastructures/repositoryImpls/repositoryImpls";
-import KanbanBoardCC from "./boardCC";
+import KanbanBoardCC from "./childComponents/boardCC";
 import { NewBoardUsecase } from "./usecase";
-import { Result } from "@/lib/result";
-import { Task } from "@/domain/entities/task";
 
 export default async function KanbanBoard() {
     const usecase = NewBoardUsecase(NewBoardRepository())
