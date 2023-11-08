@@ -1,48 +1,48 @@
-type ToDo = "ToDo"
+type ToDo = 'ToDo'
 
-type InProgress = "Doing" | "Waiting"
+type InProgress = 'Doing' | 'Waiting'
 
-type Done = "Success" | "Failed"
+type Done = 'Success' | 'Failed'
 
 export type Status = ToDo | InProgress | Done
 
 export function NewToDo(): ToDo {
-    return "ToDo"
+  return 'ToDo'
 }
 
 export function NewDoing(): InProgress {
-    return "Doing"
+  return 'Doing'
 }
 
 export function NewWating(): InProgress {
-    return "Waiting"
+  return 'Waiting'
 }
 
 export function NewSuccess(): Done {
-    return "Success"
+  return 'Success'
 }
 
 export function NewFailed(): Done {
-    return "Failed"
+  return 'Failed'
 }
 
 export function AllStatus(): Status[] {
-    return [
-        NewToDo(),
-        NewDoing(),
-        NewWating(),
-        NewSuccess(),
-        NewFailed()
-    ]
+  return [NewToDo(), NewDoing(), NewWating(), NewSuccess(), NewFailed()]
 }
 
 export function StringToStatus(s: string): Status | undefined {
-    switch(s) {
-        case "ToDo": return NewToDo()
-        case "Doing": return NewDoing()
-        case "Waiting": return NewWating()
-        case "Success": return NewSuccess()
-        case "Failed": return NewFailed()
-        default: return undefined
-    }
+  switch (s) {
+    case 'ToDo':
+      return NewToDo()
+    case 'Doing':
+      return NewDoing()
+    case 'Waiting':
+      return NewWating()
+    case 'Success':
+      return NewSuccess()
+    case 'Failed':
+      return NewFailed()
+    default:
+      return undefined
+  }
 }

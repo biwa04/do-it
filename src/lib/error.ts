@@ -1,3 +1,3 @@
-interface BaseError extends Error {
-    preError: Error | undefined
+export interface BaseError extends Error {
+  preError: Error | undefined
 }
