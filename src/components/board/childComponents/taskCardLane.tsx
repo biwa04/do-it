@@ -1,20 +1,20 @@
-import { FC } from "react";
-import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
-import Draggable, { TaskCardParam } from "./taskCard";
+import { FC } from 'react'
+import { useDroppable } from '@dnd-kit/core'
+import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
+import Draggable, { TaskCardParam } from './taskCard'
 
 export type TaskCardLaneParam = {
-  id: string;
-  title: string;
-  cards: TaskCardParam[];
-};
+  id: string
+  title: string
+  cards: TaskCardParam[]
+}
 
 const TaskCardLane: FC<TaskCardLaneParam> = ({ id, title, cards }) => {
-  const { setNodeRef } = useDroppable({ id: id });
+  const { setNodeRef } = useDroppable({ id: id })
 
   return (
     <SortableContext id={id} items={cards} strategy={rectSortingStrategy}>
-      <div ref={setNodeRef} style={{display: "inline-block", minHeight: "300px"}}>
+      <div ref={setNodeRef} style={{ display: 'inline-block', minHeight: '300px' }}>
         <h3>{title}</h3>
 
         {cards.map((card) => (
@@ -22,7 +22,7 @@ const TaskCardLane: FC<TaskCardLaneParam> = ({ id, title, cards }) => {
         ))}
       </div>
     </SortableContext>
-  );
-};
+  )
+}
 
-export default TaskCardLane;
+export default TaskCardLane
