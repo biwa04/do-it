@@ -1,16 +1,24 @@
 import { Task } from '@/domain/entities/task'
+import { BaseError } from '@/lib/error'
 import { Result, OrElse, CreateFailure } from '@/lib/result'
 import { BoardRepository } from './repositories/repository'
 
-interface UsecaseError extends BaseError {}
+type UsecaseError = BaseError & FailedToGetTasks
 
-type getNTasksError = UsecaseError
+type FailedToGetTasks = {
+  type: 'FailedToGetTasks'
+}
 
-function NewUsecaseError(e: Error): getNTasksError {
+function NewFailedToGetTasksError(
+  e: Error,
+  name: string | undefined = undefined,
+  message: string | undefined = undefined
+): UsecaseError {
   return {
+    type: 'FailedToGetTasks',
     preError: e,
-    name: 'getNTasksError',
-    message: 'Failed to get tasks'
+    name: name || e.name,
+    message: message || e.message
   }
 }
 
@@ -22,7 +30,7 @@ export function NewBoardUsecase(repo: BoardRepository): Usecase {
   return {
     getNTasks: async (n: number): Promise<Result<Task[], UsecaseError>> => {
       return repo.getTasks(n).then((result) => {
-        return OrElse(result)((val) => CreateFailure(NewUsecaseError(val.value)))
+        return OrElse(result)((val) => CreateFailure(NewFailedToGetTasksError(val.value)))
       })
     }
   }
