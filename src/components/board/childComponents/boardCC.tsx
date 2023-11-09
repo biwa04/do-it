@@ -6,6 +6,7 @@ import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragO
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { Task, ChangeStatusTo } from '@/domain/entities/task'
 import { AllStatus, StringToStatus } from '@/domain/valueobjets/status'
+import { NewTaskAction } from '../board'
 import { TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
 
@@ -61,6 +62,9 @@ const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
                 title={status}
                 cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
               ></TaskCardLane>
+              <form action={NewTaskAction}>
+                <input type="text" name="taskName"></input>
+              </form>
             </div>
           ))}
         </div>

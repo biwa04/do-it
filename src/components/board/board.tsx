@@ -4,6 +4,10 @@ import { NewBoardRepository } from '@/infrastructures/repositoryImpls/repository
 import KanbanBoardCC from './childComponents/boardCC'
 import { NewBoardUsecase } from './usecase'
 
+export const NewTaskAction = async (formData: FormData) => {
+  console.log(formData.get('taskName'))
+}
+
 export default async function KanbanBoard() {
   const usecase = NewBoardUsecase(NewBoardRepository())
   const tasks = await usecase.getNTasks(30)
