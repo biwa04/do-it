@@ -1,20 +1,19 @@
 'use client'
 
-import { FC } from 'react'
 import { useState } from 'react'
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverEvent } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { Task, ChangeStatusTo } from '@/domain/entities/task'
+import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity } from '@/domain/entities/task'
 import { AllStatus, StringToStatus } from '@/domain/valueobjets/status'
 import { NewTaskAction } from '../board'
 import { TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
 
 export type KanbanBoardParam = {
-  tasks: Task[]
+  tasks: TaskDTO[]
 }
 
-const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
+const KanbanBoardCC = (props: KanbanBoardParam) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -22,7 +21,7 @@ const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
     })
   )
 
-  const [items, setItem] = useState<Task[]>(props.tasks)
+  const [items, setItem] = useState<Task[]>(props.tasks.map((val) => TaskDTOtoTaskEntity(val)))
 
   const defaultAnnouncements = {
     onDragOver(e: DragOverEvent) {

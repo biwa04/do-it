@@ -8,4 +8,5 @@ export interface BoardRepositoryError extends BaseError {
 
 export interface BoardRepository {
   getTasks: (n: number) => Promise<Result<Task[], BoardRepositoryError>>
+  createTask: (task: Task) => Promise<Result<Task, BoardRepositoryError>>
 }

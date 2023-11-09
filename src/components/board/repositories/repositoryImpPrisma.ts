@@ -52,6 +52,24 @@ export function NewBoardRepositoryImpPrisma(prisma: PrismaClient): BoardReposito
         })
 
       return result
+    },
+
+    async createTask(task: Task): Promise<Result<Task, BoardRepositoryError>> {
+      const result = await this.value.task
+        .create({
+          data: {
+            id: task.id.value,
+            title: task.title
+          }
+        })
+        .then((task) => {
+          return CreateSuccess(NewTask(task.title, task.id))
+        })
+        .catch((error) => {
+          return CreateFailure<BoardRepositoryError>(NewUnknownError(error))
+        })
+
+      return result
     }
   }
 
