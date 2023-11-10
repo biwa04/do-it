@@ -50,6 +50,7 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
     }
   }
 
+  // From: New Task
   const [, startTransition] = useTransition()
   const [inputTaskNameValues, setInputTaskNameValues] = useState<{
     [key in Status]: string
@@ -69,7 +70,9 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
 
     // タスクの作成
     startTransition(() => {
-      NewTaskAction(e.currentTarget.value)
+      NewTaskAction(e.currentTarget.value).then((task) => {
+        setItem(items.concat([TaskDTOtoTaskEntity(task)]))
+      })
     })
 
     // 入力欄のクリア

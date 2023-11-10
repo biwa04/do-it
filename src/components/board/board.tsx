@@ -11,9 +11,10 @@ const usecase = NewBoardUsecase(NewBoardRepository())
 export const NewTaskAction = async (taskName: string) => {
   'use server'
 
-  usecase.createNewTask(NewTask(taskName, uuidv4()))
+  const task = NewTask(taskName, uuidv4())
+  await usecase.createNewTask(task)
 
-  return
+  return TaskToTaskDTO(task)
 }
 
 export default async function KanbanBoard() {
