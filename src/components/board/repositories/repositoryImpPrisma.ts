@@ -69,7 +69,7 @@ export function NewBoardRepositoryImpPrisma(prisma: PrismaClient): BoardReposito
         .findMany({
           take: n,
           orderBy: {
-            createdAt: 'desc'
+            createdAt: 'asc'
           }
         })
         .then((tasks) => {
