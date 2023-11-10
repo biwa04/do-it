@@ -3,9 +3,9 @@
 import { KeyboardEventHandler, useState, useTransition } from 'react'
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverEvent } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity } from '@/domain/entities/task'
+import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity, TaskToTaskDTO } from '@/domain/entities/task'
 import { AllStatus, Status, StringToStatus } from '@/domain/valueobjets/status'
-import { NewTaskAction } from '../board'
+import { ChangeTaskAction, NewTaskAction } from '../board'
 import { TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
 
@@ -22,6 +22,7 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
   )
 
   const [items, setItem] = useState<Task[]>(props.tasks.map((val) => TaskDTOtoTaskEntity(val)))
+  const [, startTransition] = useTransition()
 
   const defaultAnnouncements = {
     onDragOver(e: DragOverEvent) {
@@ -44,6 +45,14 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
         return
       }
 
+      startTransition(() => {
+        ChangeTaskAction(TaskToTaskDTO(item), status).then((task) => {
+          if (task.isSuccess) return
+
+          setItem(items.filter((val) => val.id.idClass.toString(val.id) != e.active.id.toString()).concat([item]))
+        })
+      })
+
       const newTask = ChangeStatusTo(item, status)
 
       setItem(items.filter((val) => val.id.idClass.toString(val.id) != e.active.id.toString()).concat([newTask]))
@@ -51,7 +60,6 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
   }
 
   // From: New Task
-  const [, startTransition] = useTransition()
   const [inputTaskNameValues, setInputTaskNameValues] = useState<{
     [key in Status]: string
   }>(
