@@ -1,6 +1,8 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { Theme } from '@emotion/react'
+import { Paper, SxProps, Typography } from '@mui/material'
 import { Task } from '@/domain/entities/task'
 import { Status } from '@/domain/valueobjets/status'
 
@@ -19,20 +21,27 @@ export function TaskToTaskCardParam(task: Task): TaskCardParam {
 }
 
 const TaskCard: FC<TaskCardParam> = ({ id, title }) => {
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: id
   })
 
-  const style = {
-    transform: CSS.Transform.toString(transform)
-  }
+  const style: SxProps<Theme> | undefined = useMemo(() => {
+    return {
+      transform: CSS.Transform.toString(transform),
+      transition
+    }
+  }, [transform, transition])
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <div>
-        <p>{title}</p>
-      </div>
-    </div>
+    <Paper
+      variant="outlined"
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      sx={{ mb: 1, p: 1, touchAction: 'none', ...style }}
+    >
+      <Typography variant="body2">{title}</Typography>
+    </Paper>
   )
 }
 

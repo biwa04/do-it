@@ -95,17 +95,17 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
                 id={status}
                 title={status}
                 cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
-              ></TaskCardLane>
-
-              <input
-                type="text"
-                value={inputTaskNameValues[status]}
-                onChange={(e) => {
-                  setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
-                }}
-                id={status}
-                onKeyDown={handleKeyDown}
-              ></input>
+              >
+                <input
+                  type="text"
+                  value={inputTaskNameValues[status]}
+                  onChange={(e) => {
+                    setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
+                  }}
+                  id={status}
+                  onKeyDown={handleKeyDown}
+                ></input>
+              </TaskCardLane>
             </div>
           ))}
         </div>
