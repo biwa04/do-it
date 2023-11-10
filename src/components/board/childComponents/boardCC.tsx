@@ -1,19 +1,19 @@
 'use client'
 
-import { FC } from 'react'
-import { useState } from 'react'
+import { KeyboardEventHandler, useState, useTransition } from 'react'
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverEvent } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { Task, ChangeStatusTo } from '@/domain/entities/task'
-import { AllStatus, StringToStatus } from '@/domain/valueobjets/status'
+import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity } from '@/domain/entities/task'
+import { AllStatus, Status, StringToStatus } from '@/domain/valueobjets/status'
+import { NewTaskAction } from '../board'
 import { TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
 
 export type KanbanBoardParam = {
-  tasks: Task[]
+  tasks: TaskDTO[]
 }
 
-const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
+const KanbanBoardCC = (props: KanbanBoardParam) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -21,7 +21,7 @@ const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
     })
   )
 
-  const [items, setItem] = useState<Task[]>(props.tasks)
+  const [items, setItem] = useState<Task[]>(props.tasks.map((val) => TaskDTOtoTaskEntity(val)))
 
   const defaultAnnouncements = {
     onDragOver(e: DragOverEvent) {
@@ -50,6 +50,38 @@ const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
     }
   }
 
+  // From: New Task
+  const [, startTransition] = useTransition()
+  const [inputTaskNameValues, setInputTaskNameValues] = useState<{
+    [key in Status]: string
+  }>(
+    AllStatus().reduce(
+      (acc, val) => {
+        acc[val] = ''
+        return acc
+      },
+      {} as { [key in Status]: string }
+    )
+  )
+
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    // Enter + Ctrl or Enter + Command
+    if (!(e.key == 'Enter' && (e.ctrlKey || e.metaKey))) return
+
+    // タスクの作成
+    const status = StringToStatus(e.currentTarget.id)
+    if (status == undefined) return
+
+    startTransition(() => {
+      NewTaskAction(e.currentTarget.value, status).then((task) => {
+        setItem(items.concat([TaskDTOtoTaskEntity(task)]))
+      })
+    })
+
+    // 入力欄のクリア
+    setInputTaskNameValues({ ...inputTaskNameValues, [e.currentTarget.id]: '' })
+  }
+
   return (
     <div>
       <DndContext {...defaultAnnouncements} sensors={sensors}>
@@ -61,6 +93,16 @@ const KanbanBoardCC: FC<KanbanBoardParam> = (props: KanbanBoardParam) => {
                 title={status}
                 cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
               ></TaskCardLane>
+
+              <input
+                type="text"
+                value={inputTaskNameValues[status]}
+                onChange={(e) => {
+                  setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
+                }}
+                id={status}
+                onKeyDown={handleKeyDown}
+              ></input>
             </div>
           ))}
         </div>

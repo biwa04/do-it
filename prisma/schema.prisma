@@ -15,5 +15,13 @@ model Task {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String
-  done      Boolean  @default(false)
+  status    Status   @default(TODO)
+}
+
+enum Status {
+  TODO
+  DOING
+  WATING
+  SUCCESS
+  FAILED
 }

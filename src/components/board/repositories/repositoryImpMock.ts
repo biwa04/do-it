@@ -17,5 +17,10 @@ export const BoardRepositoryImpMockInstance: BoardRepositoryImpMock = {
 
   async getTasks(n: number): Promise<Result<Task[], BoardRepositoryError>> {
     return CreateSuccess(this.value.slice(0, n))
+  },
+
+  async createTask(task: Task): Promise<Result<Task, BoardRepositoryError>> {
+    this.value.push(task)
+    return CreateSuccess(task)
   }
 }
