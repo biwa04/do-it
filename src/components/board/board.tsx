@@ -8,17 +8,10 @@ import { NewBoardUsecase } from './usecase'
 
 const usecase = NewBoardUsecase(NewBoardRepository())
 
-export const NewTaskAction = async (formData: FormData) => {
+export const NewTaskAction = async (taskName: string) => {
   'use server'
 
-  console.log(formData.get('taskName'))
-
-  const name = formData.get('taskName')?.toString()
-  if (name == undefined) {
-    return
-  }
-
-  usecase.createNewTask(NewTask(name, uuidv4()))
+  usecase.createNewTask(NewTask(taskName, uuidv4()))
 
   return
 }

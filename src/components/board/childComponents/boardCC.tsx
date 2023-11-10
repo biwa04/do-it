@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { KeyboardEventHandler, useState, useTransition } from 'react'
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverEvent } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity } from '@/domain/entities/task'
-import { AllStatus, StringToStatus } from '@/domain/valueobjets/status'
+import { AllStatus, Status, StringToStatus } from '@/domain/valueobjets/status'
 import { NewTaskAction } from '../board'
 import { TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
@@ -50,6 +50,32 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
     }
   }
 
+  const [, startTransition] = useTransition()
+  const [inputTaskNameValues, setInputTaskNameValues] = useState<{
+    [key in Status]: string
+  }>(
+    AllStatus().reduce(
+      (acc, val) => {
+        acc[val] = ''
+        return acc
+      },
+      {} as { [key in Status]: string }
+    )
+  )
+
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    // Enter + Ctrl or Enter + Command
+    if (!(e.key == 'Enter' && (e.ctrlKey || e.metaKey))) return
+
+    // タスクの作成
+    startTransition(() => {
+      NewTaskAction(e.currentTarget.value)
+    })
+
+    // 入力欄のクリア
+    setInputTaskNameValues({ ...inputTaskNameValues, [e.currentTarget.id]: '' })
+  }
+
   return (
     <div>
       <DndContext {...defaultAnnouncements} sensors={sensors}>
@@ -61,9 +87,16 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
                 title={status}
                 cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
               ></TaskCardLane>
-              <form action={NewTaskAction}>
-                <input type="text" name="taskName"></input>
-              </form>
+
+              <input
+                type="text"
+                value={inputTaskNameValues[status]}
+                onChange={(e) => {
+                  setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
+                }}
+                id={status}
+                onKeyDown={handleKeyDown}
+              ></input>
             </div>
           ))}
         </div>
