@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Theme } from '@emotion/react'
-import { Paper, SxProps, Typography } from '@mui/material'
+import { Input, InputProps, Paper, SxProps, Typography } from '@mui/material'
 import { Task } from '@/domain/entities/task'
 import { Status } from '@/domain/valueobjets/status'
 
@@ -41,6 +41,14 @@ const TaskCard: FC<TaskCardParam> = ({ id, title }) => {
       sx={{ mb: 1, p: 1, touchAction: 'none', width: '100%', ...style }}
     >
       <Typography variant="body2">{title}</Typography>
+    </Paper>
+  )
+}
+
+export const InputCard: FC<InputProps> = (props) => {
+  return (
+    <Paper variant="outlined" sx={{ mb: 1, p: 1, touchAction: 'none', width: '100%' }}>
+      <Input {...props} disableUnderline={true} size="small" />
     </Paper>
   )
 }

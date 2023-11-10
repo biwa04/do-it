@@ -7,7 +7,7 @@ import { Stack } from '@mui/material'
 import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity } from '@/domain/entities/task'
 import { AllStatus, Status, StringToStatus } from '@/domain/valueobjets/status'
 import { NewTaskAction } from '../board'
-import { TaskToTaskCardParam } from './taskCard'
+import { InputCard, TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
 
 export type KanbanBoardParam = {
@@ -97,15 +97,15 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
               cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
               key={status}
             >
-              <input
-                type="text"
+              <InputCard
+                id={status}
                 value={inputTaskNameValues[status]}
                 onChange={(e) => {
                   setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
                 }}
-                id={status}
                 onKeyDown={handleKeyDown}
-              ></input>
+                placeholder="New Task"
+              ></InputCard>
             </TaskCardLane>
           ))}
         </Stack>
