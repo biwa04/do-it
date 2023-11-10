@@ -38,7 +38,7 @@ const TaskCard: FC<TaskCardParam> = ({ id, title }) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      sx={{ mb: 1, p: 1, touchAction: 'none', ...style }}
+      sx={{ mb: 1, p: 1, touchAction: 'none', width: '100%', ...style }}
     >
       <Typography variant="body2">{title}</Typography>
     </Paper>

@@ -3,6 +3,7 @@
 import { KeyboardEventHandler, useState, useTransition } from 'react'
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverEvent } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
+import { Stack } from '@mui/material'
 import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity } from '@/domain/entities/task'
 import { AllStatus, Status, StringToStatus } from '@/domain/valueobjets/status'
 import { NewTaskAction } from '../board'
@@ -88,27 +89,26 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
   return (
     <div>
       <DndContext {...defaultAnnouncements} sensors={sensors}>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '400px' }}>
+        <Stack direction="row" spacing={2} justifyContent="center" alignItems="start" sx={{ minHeight: 500 }}>
           {AllStatus().map((status) => (
-            <div key={status}>
-              <TaskCardLane
+            <TaskCardLane
+              id={status}
+              title={status}
+              cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
+              key={status}
+            >
+              <input
+                type="text"
+                value={inputTaskNameValues[status]}
+                onChange={(e) => {
+                  setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
+                }}
                 id={status}
-                title={status}
-                cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
-              >
-                <input
-                  type="text"
-                  value={inputTaskNameValues[status]}
-                  onChange={(e) => {
-                    setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
-                  }}
-                  id={status}
-                  onKeyDown={handleKeyDown}
-                ></input>
-              </TaskCardLane>
-            </div>
+                onKeyDown={handleKeyDown}
+              ></input>
+            </TaskCardLane>
           ))}
-        </div>
+        </Stack>
       </DndContext>
     </div>
   )
