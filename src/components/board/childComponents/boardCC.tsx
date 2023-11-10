@@ -25,24 +25,27 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
 
   const defaultAnnouncements = {
     onDragOver(e: DragOverEvent) {
+      // デバッグ用のログ
       console.log(`Draggable item ${e.active.id} was moved over droppable area ${e.over?.id}.`)
       if (e.over == null) {
         return
       }
 
+      // ドラッグ中のタスクを取得
       const item = items.find((val) => val.id.idClass.toString(val.id) == e.active.id.toString())
       if (item == undefined) {
         return
       }
 
-      if (e.over.id.toString() in items.map((val) => val.id)) {
-        return
-      }
+      // ドロップ先のIDを取得
+      const dragOverID = e.over.id.toString()
 
-      const status = StringToStatus(e.over.id.toString())
-      if (status == undefined) {
-        return
-      }
+      // ドロップ先のIDからステータスを取得 (タスクレーンの場合 : タスクカードの場合)
+      const dragOverTask = items.find((val) => val.id.idClass.toString(val.id) == dragOverID)
+
+      const status = dragOverTask == undefined ? StringToStatus(dragOverID) : dragOverTask.status
+
+      if (status == undefined) return
 
       const newTask = ChangeStatusTo(item, status)
 
