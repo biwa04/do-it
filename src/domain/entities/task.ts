@@ -56,14 +56,14 @@ export function ChangeStatusTo(task: Task, status: Status): Task {
   }
 }
 
-export function NewTask(title: string, id: string): Task {
+export function NewTask(title: string, id: string, status: Status = 'ToDo'): Task {
   return {
     id: {
       value: id,
       idClass: TaskIDClass
     },
     title: title,
-    status: 'ToDo',
+    status: status,
     toDTO: TaskToTaskDTO,
     toEntity: TaskDTOtoTaskEntity
   }

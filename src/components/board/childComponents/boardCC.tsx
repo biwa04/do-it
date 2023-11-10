@@ -69,8 +69,11 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
     if (!(e.key == 'Enter' && (e.ctrlKey || e.metaKey))) return
 
     // タスクの作成
+    const status = StringToStatus(e.currentTarget.id)
+    if (status == undefined) return
+
     startTransition(() => {
-      NewTaskAction(e.currentTarget.value).then((task) => {
+      NewTaskAction(e.currentTarget.value, status).then((task) => {
         setItem(items.concat([TaskDTOtoTaskEntity(task)]))
       })
     })

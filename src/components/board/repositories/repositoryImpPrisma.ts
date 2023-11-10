@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
+import { Status as StatusAtPrisma } from '@prisma/client'
 import { NewTask, Task } from '@/domain/entities/task'
+import { Status } from '@/domain/valueobjets/status'
 import { CreateFailure, CreateSuccess, Result } from '@/lib/result'
 import { BoardRepository, BoardRepositoryError } from './repository'
 
@@ -28,6 +30,36 @@ function NewUnknownError(err: Error): UnknownError {
   }
 }
 
+function statusValueToStatusAtPrisma(status: Status): StatusAtPrisma {
+  switch (status) {
+    case 'ToDo':
+      return 'TODO'
+    case 'Doing':
+      return 'DOING'
+    case 'Waiting':
+      return 'WATING'
+    case 'Success':
+      return 'SUCCESS'
+    case 'Failed':
+      return 'FAILED'
+  }
+}
+
+function statusAtPrismaToStatusValue(status: StatusAtPrisma): Status {
+  switch (status) {
+    case 'TODO':
+      return 'ToDo'
+    case 'DOING':
+      return 'Doing'
+    case 'WATING':
+      return 'Waiting'
+    case 'SUCCESS':
+      return 'Success'
+    case 'FAILED':
+      return 'Failed'
+  }
+}
+
 export function NewBoardRepositoryImpPrisma(prisma: PrismaClient): BoardRepositoryImpPrisma {
   const BoardRepositoryImpPrismaInstance: BoardRepositoryImpPrisma = {
     value: prisma,
@@ -43,7 +75,7 @@ export function NewBoardRepositoryImpPrisma(prisma: PrismaClient): BoardReposito
         .then((tasks) => {
           return CreateSuccess(
             tasks.map((task) => {
-              return NewTask(task.title, task.id)
+              return NewTask(task.title, task.id, statusAtPrismaToStatusValue(task.status))
             })
           )
         })
@@ -59,7 +91,8 @@ export function NewBoardRepositoryImpPrisma(prisma: PrismaClient): BoardReposito
         .create({
           data: {
             id: task.id.value,
-            title: task.title
+            title: task.title,
+            status: statusValueToStatusAtPrisma(task.status)
           }
         })
         .then((task) => {
