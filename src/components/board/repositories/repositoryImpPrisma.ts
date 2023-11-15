@@ -103,6 +103,27 @@ export function NewBoardRepositoryImpPrisma(prisma: PrismaClient): BoardReposito
         })
 
       return result
+    },
+
+    async updateTask(task: Task): Promise<Result<Task, BoardRepositoryError>> {
+      const result = await this.value.task
+        .update({
+          where: {
+            id: task.id.value
+          },
+          data: {
+            title: task.title,
+            status: statusValueToStatusAtPrisma(task.status)
+          }
+        })
+        .then((task) => {
+          return CreateSuccess(NewTask(task.title, task.id, statusAtPrismaToStatusValue(task.status)))
+        })
+        .catch((error) => {
+          return CreateFailure<BoardRepositoryError>(NewUnknownError(error))
+        })
+
+      return result
     }
   }
 

@@ -1,9 +1,10 @@
 'use server'
 
 import { v4 as uuidv4 } from 'uuid'
-import { NewTask, TaskToTaskDTO } from '@/domain/entities/task'
+import { NewTask, TaskDTO, TaskDTOtoTaskEntity, TaskToTaskDTO } from '@/domain/entities/task'
 import { Status } from '@/domain/valueobjets/status'
 import { NewBoardRepository } from '@/infrastructures/repositoryImpls/repositoryImpls'
+import { CreateFailure, CreateSuccess } from '@/lib/result'
 import KanbanBoardCC from './childComponents/boardCC'
 import { NewBoardUsecase } from './usecase'
 
@@ -16,6 +17,20 @@ export const NewTaskAction = async (taskName: string, status: Status) => {
   await usecase.createNewTask(task)
 
   return TaskToTaskDTO(task)
+}
+
+export const ChangeTaskAction = async (task: TaskDTO, status: Status) => {
+  'use server'
+
+  const result = await usecase.changeStatus(TaskDTOtoTaskEntity(task), status).then((result) => {
+    if (result.isSuccess) {
+      return CreateSuccess(TaskToTaskDTO(result.value))
+    }
+
+    return CreateFailure(result.value)
+  })
+
+  return result
 }
 
 export default async function KanbanBoard() {
