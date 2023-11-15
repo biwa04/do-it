@@ -13,11 +13,16 @@ type Usecase = {
   createGoal(goal: Goal): Promise<Result<Goal, UsecaseError>>
 }
 
-export function NewGoallistUsecase(): Usecase {
+export function NewGoaListUsecase(): Usecase {
   return {
     getNGoals: async (): Promise<Result<Goal[], UsecaseError>> => {
       // TODO
-      return Promise.resolve(CreateSuccess([NewGoal('0', 'test1', [NewCondition('やる気はある？', false)])]))
+      return Promise.resolve(
+        CreateSuccess([
+          NewGoal('0', 'test1', [NewCondition('やる気はある？', false)]),
+          NewGoal('1', 'test2', [NewCondition('やる気はある？', false)])
+        ])
+      )
     },
 
     createGoal: async (goal: Goal): Promise<Result<Goal, UsecaseError>> => {
