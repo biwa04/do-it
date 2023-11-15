@@ -13,6 +13,13 @@ export type Condition = {
   fulfill: boolean
 }
 
+export function NewCondition(name: string, fulfill: boolean): Condition {
+  return {
+    name: name,
+    fulfill: fulfill
+  }
+}
+
 // Define Entities
 
 export type GoalDTO = {
