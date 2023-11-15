@@ -3,10 +3,11 @@
 import { KeyboardEventHandler, useState, useTransition } from 'react'
 import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverEvent } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
+import { Stack } from '@mui/material'
 import { Task, ChangeStatusTo, TaskDTO, TaskDTOtoTaskEntity, TaskToTaskDTO } from '@/domain/entities/task'
 import { AllStatus, Status, StringToStatus } from '@/domain/valueobjets/status'
 import { ChangeTaskAction, NewTaskAction } from '../board'
-import { TaskToTaskCardParam } from './taskCard'
+import { InputCard, TaskToTaskCardParam } from './taskCard'
 import TaskCardLane from './taskCardLane'
 
 export type KanbanBoardParam = {
@@ -26,24 +27,27 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
 
   const defaultAnnouncements = {
     onDragOver(e: DragOverEvent) {
+      // デバッグ用のログ
       console.log(`Draggable item ${e.active.id} was moved over droppable area ${e.over?.id}.`)
       if (e.over == null) {
         return
       }
 
+      // ドラッグ中のタスクを取得
       const item = items.find((val) => val.id.idClass.toString(val.id) == e.active.id.toString())
       if (item == undefined) {
         return
       }
 
-      if (e.over.id.toString() in items.map((val) => val.id)) {
-        return
-      }
+      // ドロップ先のIDを取得
+      const dragOverID = e.over.id.toString()
 
-      const status = StringToStatus(e.over.id.toString())
-      if (status == undefined) {
-        return
-      }
+      // ドロップ先のIDからステータスを取得 (タスクレーンの場合 : タスクカードの場合)
+      const dragOverTask = items.find((val) => val.id.idClass.toString(val.id) == dragOverID)
+
+      const status = dragOverTask == undefined ? StringToStatus(dragOverID) : dragOverTask.status
+
+      if (status == undefined) return
 
       startTransition(() => {
         ChangeTaskAction(TaskToTaskDTO(item), status).then((task) => {
@@ -93,27 +97,26 @@ const KanbanBoardCC = (props: KanbanBoardParam) => {
   return (
     <div>
       <DndContext {...defaultAnnouncements} sensors={sensors}>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '400px' }}>
+        <Stack direction="row" spacing={2} justifyContent="center" alignItems="start" sx={{ minHeight: 500 }}>
           {AllStatus().map((status) => (
-            <div key={status}>
-              <TaskCardLane
+            <TaskCardLane
+              id={status}
+              title={status}
+              cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
+              key={status}
+            >
+              <InputCard
                 id={status}
-                title={status}
-                cards={items.map(TaskToTaskCardParam).filter((val) => val.status == status)}
-              ></TaskCardLane>
-
-              <input
-                type="text"
                 value={inputTaskNameValues[status]}
                 onChange={(e) => {
                   setInputTaskNameValues({ ...inputTaskNameValues, [status]: e.target.value })
                 }}
-                id={status}
                 onKeyDown={handleKeyDown}
-              ></input>
-            </div>
+                placeholder="New Task"
+              ></InputCard>
+            </TaskCardLane>
           ))}
-        </div>
+        </Stack>
       </DndContext>
     </div>
   )
